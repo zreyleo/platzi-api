@@ -3,13 +3,22 @@
 namespace Tests\Feature;
 
 use App\Category;
-use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
 class CategoryControllerTest extends TestCase
 {
     use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        Sanctum::actingAs(
+            factory(\App\User::class)->create()
+        );
+    }
 
     public function test_index()
     {

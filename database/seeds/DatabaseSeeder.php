@@ -14,7 +14,8 @@ class DatabaseSeeder extends Seeder
         // $this->call(UserSeeder::class);
         factory(\App\User::class, 4)->create();
         factory(\App\User::class, 4)->create([
-            'email_verified_at' => null
+            'email_verified_at' => null,
+            'created_at' => now()->subDays(7)
         ]);
         $this->call(CategorySeeder::class);
         $this->call(ProductSeeder::class);

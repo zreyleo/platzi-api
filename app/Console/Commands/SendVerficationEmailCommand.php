@@ -42,7 +42,7 @@ class SendVerficationEmailCommand extends Command
         $emails = $this->argument('emails');
 
         $builder = User::query()
-            ->whereDate('created_at', '>=', now()->subDays(7)->format('Y-m-d'))
+            ->whereDate('created_at', '=', now()->subDays(7)->format('Y-m-d'))
             ->whereNull('email_verified_at');
 
         if ($emails) {
