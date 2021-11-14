@@ -3,6 +3,7 @@
 /public/storage
 /storage/*.key
 /vendor
+/storage/inspire.log
 .env
 .env.backup
 .phpunit.result.cache

@@ -406,4 +406,65 @@ class SendNewsletterCommand extends Command
 
 4. `php artisan make:notification NewsletterNotification`
 
+### clase 12: Programando Tareas
 
+1. primero se registra los comandos en el archivo `Kernel.php`.
+```
+class Kernel extends ConsoleKernel
+{
+    /**
+     * The Artisan commands provided by your application.
+     *
+     * @var array
+     */
+    protected $commands = [
+        SendNewsletterCommand::class,
+        SendVerficationEmailCommand::class
+    ];
+
+    /**
+     * Define the application's command schedule.
+     *
+     * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
+     * @return void
+     */
+    protected function schedule(Schedule $schedule)
+    {
+        $schedule->command('inspire')
+            ->evenInMaintenanceMode()
+            ->sendOutputTo(storage_path('inspire.log'), true)
+            ->everyMinute();
+
+        $schedule->call(function () {
+            echo "hola";
+        })->everyFiveMinutes();
+
+        $schedule->command(SendNewsletterCommand::class)
+            ->withoutOverlapping() // evitar superposicion de tareas
+            ->onOneServer()
+            ->mondays();
+
+        $schedule->command(SendVerficationEmailCommand::class)
+            ->onOneServer()
+            ->daily();
+    }
+
+    /**
+     * Register the commands for the application.
+     *
+     * @return void
+     */
+    protected function commands()
+    {
+        $this->load(__DIR__.'/Commands');
+
+        require base_path('routes/console.php');
+    }
+}
+```
+
+2. Se recomienda aprender a configurar tareas automaticas en el servidor. palabras claves: `contrab`, `cron`
+
+## Eventos y tareas de Laravel
+
+### clase 13: Eventos y Listeners en Laravel
