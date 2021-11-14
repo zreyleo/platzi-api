@@ -346,3 +346,64 @@ trait CanBeRated
 ```
 
 Estos trait `CanRate` y `CanBeRated` tienen como proposito ahorrar la programacion manual de la relaciona polimorfica que se haría en lo modelos `User` y `Product` ya que el primero puede ser calificador y calificado y por eso usa una programacion más compleja.
+
+## La Terminal de Laravel
+
+### clase 10: como crear comandos
+
+1. `php artisan make:command SendNewsletterCommand`
+```
+class SendNewsletterCommand extends Command
+{
+    protected $signature = 'send:newsletter {emails?*}';
+
+    protected $description = 'Envia un correo electronico';
+
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    public function handle()
+    {
+        $emails = $this->argument('emails');
+
+        $builder = User::query()->whereNotNull('email_verified_at');
+
+        if ($emails) {
+            $builder->whereIn('email', $emails);
+        }
+
+        $count = $builder->count();
+
+
+        if ($count) {
+            $this->output->createProgressBar($count);
+
+            $this->output->progressStart();
+
+            $builder
+                ->each(function (User $user) {
+                    $user->notify(new NewsletterNotification());
+                    $this->output->progressAdvance();
+                });
+
+            $this->output->progressFinish();
+
+            $this->info("Se enviaron $count correos");
+        }
+
+        $this->info('No se envio nuingun correo');
+
+        return 0;
+    }
+}
+```
+
+2. `composer require laravel/ui:^2.4` para laravel 7, luego `npm i && npm run dev`.
+
+3. en el archivo `web.php` ubicado en la carpeta `routes` se escribe `Auth::routes(['verify' => true]);`.
+
+4. `php artisan make:notification NewsletterNotification`
+
+

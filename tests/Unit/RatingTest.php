@@ -10,7 +10,7 @@ use Tests\TestCase;
 
 class RatingTest extends TestCase
 {
-    // use RefreshDatabase;
+    use RefreshDatabase;
 
     public function test_a_product_belongs_to_many_users()
     {

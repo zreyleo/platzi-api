@@ -12,7 +12,10 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // $this->call(UserSeeder::class);
-        factory(\App\User::class, 10)->create();
+        factory(\App\User::class, 4)->create();
+        factory(\App\User::class, 4)->create([
+            'email_verified_at' => null
+        ]);
         $this->call(CategorySeeder::class);
         $this->call(ProductSeeder::class);
     }
