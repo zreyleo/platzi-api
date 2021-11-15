@@ -468,3 +468,143 @@ class Kernel extends ConsoleKernel
 ## Eventos y tareas de Laravel
 
 ### clase 13: Eventos y Listeners en Laravel
+
+1. para crear eventos `php artisan make:event NombreEvento`: 
+```
+class ModelRated
+{
+    use Dispatchable, InteractsWithSockets, SerializesModels;
+
+    private Model $qualifier;
+    private Model $rateable;
+    private float $score;
+
+    /**
+     * Create a new event instance.
+     *
+     * @return void
+     */
+    public function __construct(Model $qualifier, Model $rateable, float $score)
+    {
+        $this->qualifier = $qualifier;
+        $this->rateable = $rateable;
+        $this->score = $score;
+    }
+
+    /**
+     * Get the channels the event should broadcast on.
+     *
+     * @return \Illuminate\Broadcasting\Channel|array
+     */
+    public function broadcastOn()
+    {
+        return new PrivateChannel('channel-name');
+    }
+
+    public function getQualifier()
+    {
+        return $this->qualifier;
+    }
+
+    public function getRateable()
+    {
+        return $this->rateable;
+    }
+
+    public function getScore()
+    {
+        return $this->score;
+    }
+}
+```
+
+2. crear el listener para el evento `php artisan make:listener` para que lo escuche:
+```
+class SendEmailModelRatedNotification
+{
+    /**
+     * Create the event listener.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        //
+    }
+
+    /**
+     * Handle the event.
+     *
+     * @param  object  $event
+     * @return void
+     */
+    public function handle(ModelRated $event)
+    {
+        $rateable = $event->getRateable();
+
+        if ($rateable instanceof Product) {
+            $notification = new ModelRatedNotification(
+                $event->getQualifier()->name,
+                $rateable->name,
+                $event->getScore()
+            );
+
+            $rateable->createdBy->notify($notification);
+        }
+    }
+}
+```
+
+3. se registrar en el archivo `EventServiceProvider.php`
+```
+class EventServiceProvider extends ServiceProvider
+{
+    /**
+     * The event listener mappings for the application.
+     *
+     * @var array
+     */
+    protected $listen = [
+        Registered::class => [
+            SendEmailVerificationNotification::class,
+        ],
+        ModelRated::class => [
+            SendEmailModelRatedNotification::class
+        ]
+    ];
+
+    .
+    .
+    .
+}
+```
+
+4. y se usan con el helper `event()` donde se quiere emitir el evento:
+```
+trait CanRate
+{
+    .
+    .
+    .
+
+    public function rate(Model $model, float $score)
+    {
+        if ($this->hasRated($model)) {
+            return false;
+        }
+
+        $this->ratings($model)->attach($model->getKey(), [
+            'score' => $score,
+            'rateable_type' => get_class($model)
+        ]);
+
+        event(new ModelRated($this, $model, $score));
+
+        return true;
+    }
+
+    .
+    .
+    .
+}
+```
