@@ -608,3 +608,32 @@ trait CanRate
     .
 }
 ```
+
+### clase 14: eventos de eloquent
+
+los eventos de eloquent nos sirve para realizar operaciones cuando los modelos realizan ciertas acciones.
+```
+class Product extends Model
+{
+    .
+    .
+    .
+
+    protected static function booted()
+    {
+        static::creating(function (Product $product) {
+            $faker = \Faker\Factory::create();
+            $product->image_url = $faker->imageUrl();
+            $product->createdBY()->associate(auth()->user());
+        });
+
+    }
+
+    .
+    .
+    .
+}
+
+```
+
+pero tambien se pueden hacer observables, leer documentacion.

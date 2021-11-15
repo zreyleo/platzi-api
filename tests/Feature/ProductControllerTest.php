@@ -9,7 +9,7 @@ use Tests\TestCase;
 
 class ProductControllerTest extends TestCase
 {
-    use RefreshDatabase;
+    // use RefreshDatabase;
 
     protected function setUp(): void
     {
@@ -34,8 +34,8 @@ class ProductControllerTest extends TestCase
     public function test_create_new_product()
     {
         $data = [
-            'name' => 'Hola',
-            'price' => 1000,
+            'name' => 'Play Station 4',
+            'price' => 400,
         ];
         $response = $this->postJson('/api/products', $data);
 
