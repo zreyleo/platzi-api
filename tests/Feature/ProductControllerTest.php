@@ -9,7 +9,7 @@ use Tests\TestCase;
 
 class ProductControllerTest extends TestCase
 {
-    // use RefreshDatabase;
+    use RefreshDatabase;
 
     protected function setUp(): void
     {
@@ -26,8 +26,8 @@ class ProductControllerTest extends TestCase
 
         $response = $this->getJson('/api/products');
 
-        // $response->assertSuccessful();
-        // $response->assertHeader('content-type', 'application/json');
+        $response->assertSuccessful();
+        $response->assertHeader('content-type', 'application/json');
         $response->assertJsonCount(5, 'data');
     }
 
@@ -39,7 +39,7 @@ class ProductControllerTest extends TestCase
         ];
         $response = $this->postJson('/api/products', $data);
 
-        // $response->assertSuccessful();
+        $response->assertSuccessful();
         $response->assertHeader('content-type', 'application/json');
         $this->assertDatabaseHas('products', $data);
     }

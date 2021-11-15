@@ -39,7 +39,7 @@ class CategoryControllerTest extends TestCase
         $response = $this->postJson('/api/categories', $data);
 
         $response->assertSuccessful();
-        // $response->assertHeader('content-type', 'application/json');
+        $response->assertHeader('content-type', 'application/json');
         $this->assertDatabaseHas('categories', $data);
     }
 

@@ -637,3 +637,43 @@ class Product extends Model
 ```
 
 pero tambien se pueden hacer observables, leer documentacion.
+
+### clase 15: introduccion a queues y jobs
+
+los queues y jobs ayudan al servidor hacer tareas en segundo plano
+
+1. `php artisan queue:table`
+
+2. se escribe la variable de entorno `QUEUE_CONNECTION=database`
+
+3. `php artisan make:job SendWelcomeMailJob`, y se trabaja que es lo que se quiere hacer para que no interrumpa la respuesta en el servidor.
+```
+class SendWelcomeEmailJob implements ShouldQueue
+{
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    private string $userEmail;
+
+    public function __construct(string $userEmail)
+    {
+        $this->userEmail = $userEmail;
+    }
+
+    public function handle()
+    {
+        $mail = new WelcomeMail();
+
+        Mail::to($this->userEmail)->send($mail);
+    }
+}
+```
+
+4. se usa el helper `dispatch()` para almacenar el job donde queriamos que ejecute las acciones.
+```
+protected function verified(Request $request)
+    {
+        dispatch(new SendWelcomeEmailJob($request->user()->email));
+    }
+```
+
+y para ejecutar los jobs `php artisan queue:work` o `php artisan queue:listen`.

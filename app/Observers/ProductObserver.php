@@ -16,7 +16,7 @@ class ProductObserver
     {
         $faker = \Faker\Factory::create();
         $product->image_url = $faker->imageUrl();
-        $product->createdBY()->associate(auth()->user());
+        $product->createdBY()->associate(auth()->user() ?: 1);
         $product->save();
     }
 
