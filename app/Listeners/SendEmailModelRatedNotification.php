@@ -8,7 +8,7 @@ use App\Product;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
-class SendEmailModelRatedNotification
+class SendEmailModelRatedNotification implements ShouldQueue
 {
     /**
      * Create the event listener.
