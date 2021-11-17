@@ -690,4 +690,8 @@ es un manejador de jobs
 
 4. `artisan horizon`
 
+### Manejo de errores
+
+la clase `Handler` ubicada en el archivo `app/Execeptions/Handler.php` se encarga de manejar los errores de la aplicacion.
+
 
