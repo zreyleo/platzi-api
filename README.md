@@ -677,3 +677,17 @@ protected function verified(Request $request)
 ```
 
 y para ejecutar los jobs `php artisan queue:work` o `php artisan queue:listen`.
+
+### clase 17: laravel horizon
+
+es un manejador de jobs
+
+1. `composer require predis/predis`
+
+2. `composer require laravel/horizon:^4` para laravel 7 y se tiene que estar usando una version de php superior a la 7.2.35 pero menos a la 8.
+
+3. `artisan horizon:install`
+
+4. `artisan horizon`
+
+
