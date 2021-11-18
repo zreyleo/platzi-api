@@ -686,12 +686,91 @@ es un manejador de jobs
 
 2. `composer require laravel/horizon:^4` para laravel 7 y se tiene que estar usando una version de php superior a la 7.2.35 pero menos a la 8.
 
-3. `artisan horizon:install`
+3. `php artisan horizon:install`
 
-4. `artisan horizon`
+4. `php artisan horizon`
 
-### Manejo de errores
+## Manejo de errores
+
+### clase 18: como capturar y leer errores
 
 la clase `Handler` ubicada en el archivo `app/Execeptions/Handler.php` se encarga de manejar los errores de la aplicacion.
+
+### clase 19: excepciones personalizadas
+
+1. `php artisan make:exception InvalidScoreException`
+```
+class InvalidScoreException extends Exception
+{
+    private int $from;
+    private int $to;
+
+    public function __construct($from, $to)
+    {
+        $this->from = $from;
+        $this->to = $to;
+    }
+
+    public function render()
+    {
+        return response()->json([
+            trans('rating.invalidScore', [
+                'from' => $this->from,
+                'to' => $this->to
+            ])
+        ]);
+    }
+}
+
+```
+
+2. se crea un archivo `config/rating.php` para establecer limites para enviar el score
+```
+<?php
+
+return [
+    'models' => [
+        'rating' => \App\Rating::class
+    ],
+    'from' => 1,
+    'to' => 5
+];
+```
+
+3. se crea un archivo en directorio `resorces/lang/en/rating.php`  para escribir el mensaje de error.
+```
+<?php
+
+return [
+    'invalidScore' => 'El valor debe estar entre :from y :to'
+];
+
+```  
+
+4. se lee estas variables desde el lugar que se evalua el score, en este caso en el trait CanRate, que en caso de error lanzar la excepcion
+```
+public function rate(Model $model, float $score)
+    {
+        if ($this->hasRated($model)) {
+            return false;
+        }
+
+        $from = config('rating.from');
+        $to = config('rating.to');
+
+        if ($score < $from || $score > $to) {
+            throw new InvalidScoreException($from, $to);
+        }
+
+        $this->ratings($model)->attach($model->getKey(), [
+            'score' => $score,
+            'rateable_type' => get_class($model)
+        ]);
+
+        event(new ModelRated($this, $model, $score));
+
+        return true;
+    }
+```
 
 

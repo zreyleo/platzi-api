@@ -38,9 +38,9 @@ class RatingTest extends TestCase
         $product = factory(Product::class)->create();
 
         $user->rate($product, 5);
-        $user2->rate($product, 10);
+        $user2->rate($product, 5);
 
-        $this->assertEquals(7.5, $product->averageRating(User::class));
+        $this->assertEquals(5, $product->averageRating(User::class));
     }
 
     public function test_rating_model()
@@ -55,8 +55,8 @@ class RatingTest extends TestCase
         /** @var Rating $rating */
         $rating = Rating::first();
 
-        $this->assertInstanceOf(Product::class, $rating->rateable);
         $this->assertInstanceOf(User::class, $rating->qualifier);
+        $this->assertInstanceOf(Product::class, $rating->rateable);
     }
 
     public function test_user_can_rate_user()

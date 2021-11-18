@@ -29,7 +29,7 @@ class RatingControllerTest extends TestCase
         $product = factory(Product::class)->create();
 
         $this->post('api/rate/products/' . $product->id, [
-            'score' => 10
+            'score' => 5
         ]);
 
         $rating = Rating::first();
@@ -45,7 +45,7 @@ class RatingControllerTest extends TestCase
         // dd($user);
 
         $this->post('api/rate/users/' . $user->id, [
-            'score' => 10
+            'score' => 5
         ]);
 
         $rating = Rating::first();
