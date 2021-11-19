@@ -34,3 +34,7 @@ Route::post('rate/products/{product}', 'RatingController@rateProduct')
 Route::post('rate/users/{user}', 'RatingController@rateUser')
     ->middleware('auth:sanctum');
 
+Route::get('server-error', function () {
+    abort(500);
+});
+

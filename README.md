@@ -773,4 +773,12 @@ public function rate(Model $model, float $score)
     }
 ```
 
+### clase 20: Laravel Telescope
+
+telescope es una herramienta de debuging.
+
+1. `composer require laravel/telescope:^3` para laravel 7
+
+2. `php artisan telescope:install` y `php artisan migrate`
+
 
