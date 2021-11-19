@@ -18,23 +18,26 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::middleware('auth:sanctum')->group(function () {
+    Route::apiResource('products', 'ProductController');
+
+    Route::apiResource('categories', 'CategoryController');
+
+    Route::post('newsletter', 'NewsletterController@send');
+
+    Route::post('rate/products/{product}', 'RatingController@rateProduct');
+
+    Route::post('rate/users/{user}', 'RatingController@rateUser');
+
+    Route::post('rating/{rating}/approve', 'RatingController@approve');
+
+    Route::get('rating', 'RatingController@list');
+});
+
 Route::post('sanctum/token', 'UserTokenController');
-
-Route::apiResource('products', 'ProductController')
-    ->middleware('auth:sanctum');
-
-Route::apiResource('categories', 'CategoryController')
-    ->middleware('auth:sanctum');
-
-Route::post('newsletter', 'NewsletterController@send');
-
-Route::post('rate/products/{product}', 'RatingController@rateProduct')
-    ->middleware('auth:sanctum');
-
-Route::post('rate/users/{user}', 'RatingController@rateUser')
-    ->middleware('auth:sanctum');
 
 Route::get('server-error', function () {
     abort(500);
 });
+
 

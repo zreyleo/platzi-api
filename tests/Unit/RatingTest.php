@@ -69,7 +69,7 @@ class RatingTest extends TestCase
         $user->rate($user2, 5);
 
         /** @var Rating $rating */
-        $rating = Rating::first();
+        $rating = Rating::all()->last();
 
         $this->assertInstanceOf(User::class, $rating->rateable);
         $this->assertInstanceOf(User::class, $rating->qualifier);

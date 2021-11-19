@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\RatingResource;
 use App\Product;
+use App\Rating;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class RatingController extends Controller
 {
@@ -38,5 +41,28 @@ class RatingController extends Controller
         return response()->json([
             'data' => 'Todo ok'
         ]);
+    }
+
+    public function approve(Rating $rating)
+    {
+        Gate::authorize('admin', $rating);
+
+        $rating->approve();
+        $rating->save();
+
+        return response()->json();
+    }
+
+    public function list(Request $request)
+    {
+        $builder = Rating::query();
+
+        if ($request->has('approved')) {
+            $builder->whereNotNull('approved_at');
+        } else if ($request->has('notApproved')) {
+            $builder->whereNull('approved_at');
+        }
+
+        return RatingResource::collection($builder->get());
     }
 }
