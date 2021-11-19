@@ -781,4 +781,26 @@ telescope es una herramienta de debuging.
 
 2. `php artisan telescope:install` y `php artisan migrate`
 
+### clase 25: service provider
+
+los service provider nos ayudan a hacer accesible las variable que queremos en el arranque de nuestra aplicaci&oacute;n, aqu&iacute; un ejemplo:
+
+1. `php artisan make:provider RatingProvider`
+```
+class RatingProvider extends ServiceProvider
+{
+    public function register()
+    {
+        //
+    }
+
+    public function boot()
+    {
+        view()->composer('home', function (View $view) {
+            $view->with('ratings', RatingResource::collection(Rating::all()));
+        });
+    }
+}
+```
+
 
